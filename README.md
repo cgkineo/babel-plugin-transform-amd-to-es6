@@ -1,7 +1,7 @@
 # babel-plugin-transform-amd-to-es6
 
-> Replace amd `define`/`require`/`return` with `import/export default`
-> Allow ES6 modules to register `export default` with `requirejs` client-side
+> Replace amd `define`/`require`/`return` with `import/export default`  
+> Allow ES6 modules to register `export default` with `requirejs` client-side  
 
 ## Credits
 
