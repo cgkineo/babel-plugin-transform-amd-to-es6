@@ -52,7 +52,8 @@ plugins: [
       defineFunctionName: '__AMD', // __AMD by default
       defineModuleId: (moduleId) => { // No default provided
         // convert filenames to client-side module ids
-      }
+      },
+      ignores: [] // don't transform packages included here
     }
   ]
 ]
