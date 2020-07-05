@@ -10,8 +10,8 @@ module.exports = declare((api, options ) => {
 
     visitor: {
       Program: function (path, file) {
-        if (options && options.ignore) {
-          if (options.ignore.find(pattern => minimatch(file.filename, pattern))) {
+        if (options && options.excludes) {
+          if (options.excludes.find(pattern => minimatch(file.filename, pattern))) {
             return;
           }
         }
