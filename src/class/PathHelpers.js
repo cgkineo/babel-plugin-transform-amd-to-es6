@@ -1,5 +1,4 @@
 const equal = require('./equal');
-const { exists } = require('grunt');
 const _ = require('lodash');
 
 class PathHelpers {
