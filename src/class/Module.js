@@ -32,11 +32,13 @@ function getImmediatelyInvokedFunctionExpression (body) {
 
 class Module extends PathHelpers {
 
-  constructor (path, file) {
+  constructor (path, file, {
+    ignoreNestedRequires = false
+   } = {}) {
     super(path);
     this.file = file;
     this.analyzer = new Analyzer(this.path)
-    this.importer = new Importer(this.path, { analyzer: this.analyzer })
+    this.importer = new Importer(this.path, { analyzer: this.analyzer, ignoreNestedRequires })
     this.exporter = new Exporter(this.path, { analyzer: this.analyzer })
   }
 
@@ -207,6 +209,10 @@ class Module extends PathHelpers {
           }
           return true
         })
+        // Filter empty variable declarations
+        if (node.declarations.length === 0) {
+          return null
+        }
         return node
       }
       return node

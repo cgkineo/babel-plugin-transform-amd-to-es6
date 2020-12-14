@@ -2,7 +2,7 @@ const { declare, MatchPattern } = require("@babel/helper-plugin-utils");
 const Module = require("./class/Module");
 const minimatch = require('minimatch');
 
-module.exports = declare((api, options ) => {
+module.exports = declare((api, options) => {
   api.assertVersion(7);
 
   return {
@@ -15,7 +15,7 @@ module.exports = declare((api, options ) => {
             return;
           }
         }
-        const m = new Module(path, file);
+        const m = new Module(path, file, options);
         m.amdToES6Modules(options)
         m.amdDefineES6Modules(options)
       }

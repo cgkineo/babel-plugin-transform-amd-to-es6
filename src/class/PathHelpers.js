@@ -46,7 +46,7 @@ class PathHelpers {
     const parents = [];
     this.path.traverse({
       enter(path) {
-        callback(path.node, parents[parents.length - 1]);
+        callback(path.node, parents[parents.length - 1], parents);
         parents.push(path.node);
       },
       exit() {

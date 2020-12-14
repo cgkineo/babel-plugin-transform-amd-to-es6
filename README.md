@@ -49,6 +49,7 @@ plugins: [
     {
       amdToES6Modules: true, // true by default
       amdDefineES6Modules: true, // false by default
+      ignoreNestedRequires: true, // false by default
       defineFunctionName: '__AMD', // __AMD by default
       defineModuleId: (moduleId) => { // No default provided
         // convert filenames to client-side module ids

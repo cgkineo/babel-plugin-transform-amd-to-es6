@@ -18,6 +18,7 @@ module.exports = class Importer extends PathHelpers {
   constructor (path, options) {
     super(path);
     this.analyzer = options.analyzer
+    this.options = options || {};
   }
 
   harvest () {
@@ -33,8 +34,14 @@ module.exports = class Importer extends PathHelpers {
   }
 
   getRequireSugarDependencies () {
+    const rootBlock = this.first('BlockStatement');
     const nodes = []
-    this.walk(node => {
+    this.walk((node, parent, parents) => {
+      // Option to only import var Name = require(); declarations from the root of the module body
+      const isInRootBlock = (parents[parents.length - 2] !== rootBlock);
+      if (this.options.ignoreNestedRequires && isInRootBlock) {
+        return;
+      }
       if (isRequireSugarVariableDeclarator(node)) {
         nodes.push(this.getVariableDeclaratorRequire(node))
       } else if (isRequireSugarVariableDeclaratorWithMemberExpression(node)) {
