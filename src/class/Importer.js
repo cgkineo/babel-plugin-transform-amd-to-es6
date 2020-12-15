@@ -37,9 +37,10 @@ module.exports = class Importer extends PathHelpers {
     const rootBlock = this.first('BlockStatement');
     const nodes = []
     this.walk((node, parent, parents) => {
-      // Option to only import var Name = require(); declarations from the root of the module body
-      const isInRootBlock = (parents[parents.length - 2] !== rootBlock);
-      if (this.options.ignoreNestedRequires && isInRootBlock) {
+      // Option to only import var Name = require(); and require(); from the root of the module body
+      const grandParent = parents[parents.length - 2];
+      const isNotInRootBlock = (grandParent !== rootBlock && parent !== rootBlock);
+      if (this.options.ignoreNestedRequires && isNotInRootBlock) {
         return;
       }
       if (isRequireSugarVariableDeclarator(node)) {
