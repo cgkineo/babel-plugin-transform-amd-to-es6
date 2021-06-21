@@ -1,8 +1,8 @@
 {
   "name": "babel-plugin-transform-amd-to-es6",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Convert AMD modules to ES modules using babel",
-  "home": "https://github.com/cgkineo/babel-plugin-transform-amd-to-es6",
+  "homepage": "https://github.com/cgkineo/babel-plugin-transform-amd-to-es6",
   "license": "MIT",
   "main": "src/index.js",
   "keywords": [
