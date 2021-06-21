@@ -14,8 +14,6 @@ const Exporter = require('./Exporter')
 
 function getImmediatelyInvokedFunctionExpression (body) {
   return {
-    type: 'ExpressionStatement',
-    expression: {
       type: 'CallExpression',
       callee: {
         type: 'FunctionExpression',
@@ -28,7 +26,6 @@ function getImmediatelyInvokedFunctionExpression (body) {
       arguments: []
     }
   }
-}
 
 class Module extends PathHelpers {
 
@@ -59,6 +56,19 @@ class Module extends PathHelpers {
       // Correct from require to define
       require.callee.name = 'define';
       define = require;
+    } else if (define.arguments && define.arguments[0].type !== "StringLiteral" && (define.arguments[define.arguments.length - 1].type !== 'FunctionExpression' && define.arguments[define.arguments.length - 1].type !== 'ArrowFunctionExpression')) {
+      // Convert UMD modules to AMD for import
+      // Usually a third party library
+
+      // const defineModuleId = typeof options.defineModuleId === "function" ?
+      //   options.defineModuleId(this.file.filename) :
+      //   this.file.filename;
+      // console.log(`UMD converted to AMD: ${defineModuleId}`)
+      const mainFunction = this.path.node.body[0].expression.type === "UnaryExpression" ?
+        this.path.node.body[0].expression.argument.arguments[0] :
+        this.path.node.body[0].expression.arguments[0]
+      define.arguments[define.arguments.length - 1] = mainFunction
+      this.path.node.body[0].expression = define;
     }
     if (isDefineWithObjectExpression(define)) {
       this.path.node.body = [{
@@ -82,7 +92,7 @@ class Module extends PathHelpers {
     }
     const node = this.first('ExportDefaultDeclaration');
     if (!node) return;
-    const isExportingStringLiteral = (node.declaration.type === "StringLiteral");
+    const isExportingStringLiteral = (node.declaration && node.declaration.type === "StringLiteral");
     if (isExportingStringLiteral) {
       return; // Rollup preflight checks
     }
@@ -108,7 +118,7 @@ class Module extends PathHelpers {
   prepare (define) {
     this.removeTrueIfStatements()
     this.flattenAssignments()
-    this.wrapMultipleReturns(define)
+    this.wrapNoExport(define)
   }
 
   removeTrueIfStatements () {
@@ -175,20 +185,19 @@ class Module extends PathHelpers {
     return this.find('MemberExpression[object.name="exports"][property.name="default"]').length > 0
   }
 
-  wrapMultipleReturns (node) {
+  wrapNoExport (node) {
     if (this.hasExportsDefault()) return
     const args = getDefineCallbackArguments(node)
-    if (args.body.type === 'BlockStatement') {
-      const types = args.body.body.map(leaf => leaf.type)
-      if (!types.includes('ReturnStatement') && types.includes('IfStatement')) {
-        args.body.body = [{ type: 'ReturnStatement', argument: getImmediatelyInvokedFunctionExpression(args.body.body) }]
-      }
-    }
+    if (!args.body || args.body.type !== 'BlockStatement') return;
+    const types = args.body.body.map(leaf => leaf.type)
+    const returnStatements = types.reduce((sum, type) => (sum += type === 'ReturnStatement' ? 1 : 0 ), 0);
+    if (returnStatements !== 0 || args.body.body.length === 0) return;
+    args.body.body = [{ type: 'ReturnStatement', argument: getImmediatelyInvokedFunctionExpression(args.body.body) }]
   }
 
   getBody (node) {
     const args = getDefineCallbackArguments(node)
-    if (args.body.type === 'BlockStatement') {
+    if (args.body && args.body.type === 'BlockStatement') {
       return args.body.body
     }
     return [{ type: 'ExportDefaultDeclaration', declaration: args.body }]
