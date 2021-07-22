@@ -76,14 +76,14 @@ class Module extends PathHelpers {
       // Correct from require to define
       require.callee.name = 'define';
       define = require;
-    } else if (isUMD && options.umdToAMDModules === true) {) {
+    } else if (isUMD && options.umdToAMDModules === true) {
       // Convert UMD modules to AMD for import
       // Usually a third party library
       const functions = this.find('FunctionExpression');
       const longestFunctions = functions.sort((a, b) => {
-          const aLength = a.end - a.start;
-          const bLength = b.end - b.start;
-          return (bLength - aLength);
+        const aLength = a.end - a.start;
+        const bLength = b.end - b.start;
+        return (bLength - aLength);
       });
       define.arguments[define.arguments.length - 1] = longestFunctions[0];
       this.path.node.body[0].expression = define;

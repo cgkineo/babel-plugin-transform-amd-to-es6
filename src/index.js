@@ -1,4 +1,4 @@
-const { declare, MatchPattern } = require("@babel/helper-plugin-utils");
+const { declare } = require("@babel/helper-plugin-utils");
 const Module = require("./class/Module");
 const minimatch = require('minimatch');
 
