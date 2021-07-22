@@ -62,6 +62,8 @@ class Module extends PathHelpers {
       return;
     }
     let define = this.first('CallExpression[callee.name=define]');
+    const moduleExports = this.first("MemberExpression[object.name=module][property.name=exports]");
+    const isUMD = (define && moduleExports) || ((define && define.arguments && define.arguments[0].type !== "StringLiteral" && (define.arguments[define.arguments.length - 1].type !== 'FunctionExpression' && define.arguments[define.arguments.length - 1].type !== 'ArrowFunctionExpression')));
     if (!define) {
       const require = this.first('CallExpression[callee.name=require]');
       if (!require) {
@@ -74,18 +76,16 @@ class Module extends PathHelpers {
       // Correct from require to define
       require.callee.name = 'define';
       define = require;
-    } else if (define.arguments && define.arguments[0].type !== "StringLiteral" && (define.arguments[define.arguments.length - 1].type !== 'FunctionExpression' && define.arguments[define.arguments.length - 1].type !== 'ArrowFunctionExpression')) {
+    } else if (isUMD && options.umdToAMDModules === true) {) {
       // Convert UMD modules to AMD for import
       // Usually a third party library
-
-      // const defineModuleId = typeof options.defineModuleId === "function" ?
-      //   options.defineModuleId(this.file.filename) :
-      //   this.file.filename;
-      // console.log(`UMD converted to AMD: ${defineModuleId}`)
-      const mainFunction = this.path.node.body[0].expression.type === "UnaryExpression" ?
-        this.path.node.body[0].expression.argument.arguments[0] :
-        this.path.node.body[0].expression.arguments[0]
-      define.arguments[define.arguments.length - 1] = mainFunction
+      const functions = this.find('FunctionExpression');
+      const longestFunctions = functions.sort((a, b) => {
+          const aLength = a.end - a.start;
+          const bLength = b.end - b.start;
+          return (bLength - aLength);
+      });
+      define.arguments[define.arguments.length - 1] = longestFunctions[0];
       this.path.node.body[0].expression = define;
       this.isUMD = true;
     }

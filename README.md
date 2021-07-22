@@ -48,6 +48,7 @@ plugins: [
   [
     'transform-amd-to-es6',
     {
+      umdToAMDModules: false, // false by default
       amdToES6Modules: true, // true by default
       amdDefineES6Modules: true, // false by default
       ignoreNestedRequires: true, // false by default
