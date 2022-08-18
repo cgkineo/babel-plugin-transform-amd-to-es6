@@ -15,6 +15,11 @@ module.exports = declare((api, options) => {
             return;
           }
         }
+        if (options && options.includes) {
+          if (!options.includes.find(pattern => minimatch(file.filename, pattern))) {
+            return;
+          }
+        }
         const m = new Module(path, file, options);
         m.amdToES6Modules(options)
         m.amdDefineES6Modules(options)
