@@ -69,7 +69,7 @@ class Module extends PathHelpers {
       if (!require) {
         return;
       }
-      const isInitialRequire = (this.path.node.body[0] && this.path.node.body[0].expression === require);
+      const isInitialRequire = (this.path.node.body[0] && this.path.node.body[0].expression === require && this.path.node.body[0].expression.arguments > 1);
       if (!isInitialRequire) {
         return;
       }
