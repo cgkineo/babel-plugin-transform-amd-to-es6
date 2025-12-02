@@ -15,7 +15,6 @@
   "peerDependencies": {
     "@babel/core": "^7.0.0-0"
   },
-  "private": true,
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/helper-plugin-test-runner": "^7.10.4",
