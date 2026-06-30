@@ -20,8 +20,8 @@
     "@babel/core": "^7.0.0-0"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.4",
-    "@babel/helper-plugin-test-runner": "^7.10.4",
+    "@babel/core": "^8.0.1",
+    "@babel/helper-plugin-test-runner": "^8.0.0",
     "@semantic-release/git": "^10.0.1",
     "conventional-changelog-eslint": "^6.0.0",
     "semantic-release": "^25.0.2",
