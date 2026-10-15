@@ -3,7 +3,7 @@ const Module = require("./class/Module");
 const minimatch = require('minimatch');
 
 module.exports = declare((api, options) => {
-  api.assertVersion(7);
+  api.assertVersion("^7.0.0 || ^8.0.0");
 
   return {
     name: "transform-amd-to-es6",
