@@ -14,10 +14,11 @@
   ],
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.10.4",
-    "minimatch": "^3.0.4"
+    "minimatch": "^3.0.4",
+    "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@babel/core": "^7.0.0-0"
+    "@babel/core": "^7.0.0-0 || ^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
